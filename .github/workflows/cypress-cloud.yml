@@ -32,7 +32,7 @@ jobs:
       needs: cypress-e2e-electron
       runs-on: ubuntu-latest
       container:
-        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4-edge-138.0.3351.83-1
+        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4
         options: --user 1001
       steps:
         - name: Get Code
@@ -50,11 +50,10 @@ jobs:
             CYPRESS_RECORD_KEY: 3e888c72-b6a3-467a-a44c-9e32f2e09422
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   cypress-e2e-firefox:
-    needs: cypress-e2e-chrome
+    needs: cypress-e2e-electron
     runs-on: ubuntu-latest
     container:
-        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4-edge-138.0.3351.83-1
-        options: --user 1001
+        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4
     steps:
       - name: Get Code
         uses: actions/checkout@v4.2.2
