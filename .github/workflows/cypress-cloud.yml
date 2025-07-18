@@ -10,6 +10,51 @@ on:
 jobs:
   cypress-e2e-electron:
     runs-on: ubuntu-latest
+    container:
+        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4-edge-138.0.3351.83-1
+        options: --user 1001
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4.2.2
+        
+      - name: Cypress run
+        uses: cypress-io/github-action@v6.5.0
+        with:
+          install-command: yarn install
+          browser: electron
+          record: true
+          group: UI Electron
+          spec: ${{ github.event.inputs.spec }}
+        env:
+          CYPRESS_RECORD_KEY: 3e888c72-b6a3-467a-a44c-9e32f2e09422
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  cypress-e2e-chrome:
+      needs: cypress-e2e-electron
+      runs-on: ubuntu-latest
+      container:
+        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4-edge-138.0.3351.83-1
+        options: --user 1001
+      steps:
+        - name: Get Code
+          uses: actions/checkout@v4.2.2
+  
+        - name: Cypress run
+          uses: cypress-io/github-action@v6.5.0
+          with:
+            install-command: yarn install
+            browser: chrome
+            record: true
+            group: UI Chrome
+            spec: ${{ github.event.inputs.spec }}
+          env:
+            CYPRESS_RECORD_KEY: 3e888c72-b6a3-467a-a44c-9e32f2e09422
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  cypress-e2e-firefox:
+    needs: cypress-e2e-chrome
+    runs-on: ubuntu-latest
+    container:
+        image: cypress/browsers:node-22.17.1-chrome-138.0.7204.157-1-ff-140.0.4-edge-138.0.3351.83-1
+        options: --user 1001
     steps:
       - name: Get Code
         uses: actions/checkout@v4.2.2
@@ -18,9 +63,9 @@ jobs:
         uses: cypress-io/github-action@v6.5.0
         with:
           install-command: yarn install
-          browser: electron
+          browser: firefox
           record: true
-          group: UI Electron
+          group: UI Firefox
           spec: ${{ github.event.inputs.spec }}
         env:
           CYPRESS_RECORD_KEY: 3e888c72-b6a3-467a-a44c-9e32f2e09422
